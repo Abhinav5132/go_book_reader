@@ -1,29 +1,32 @@
 import {useState} from 'react';
-import logo from './assets/images/logo-universal.png';
 import './App.css';
-import {Greet} from "../wailsjs/go/main/App";
+import {GetBookPath, OpenBookFile} from "../wailsjs/go/main/App"
 
 function App() {
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState('');
-    const updateName = (e: any) => setName(e.target.value);
-    const updateResultText = (result: string) => setResultText(result);
 
-    function greet() {
-        Greet(name).then(updateResultText);
+    const [bookData, setBookData] = useState<String | null>(null)
+    const txtPath = async () => {
+        const data = await GetBookPath()
+
+        if (!data || data == "") return 
+        setBookData(data)
     }
 
-    return (
-        <div id='main' className="text-shadow-amber-100 p-8 rounded-2xl bg-amber-800">
-            <h1 id='Title'>
-                "Welcome to GoReader"
-            </h1>
+    if (bookData) {
+        return (
+            <div className='p-8 text-black font-bold whitespace-pre-line leading-relaxed text-left'>
+                <div>{bookData}</div>
+            </div>
+        )
+    }
 
-            <button className='border-green-500 text-2xl text-shadow-fuchsia-200 p-8'>
-                "Get Started"
+    else {
+        return <div>
+            <button onClick={txtPath}>
+                Open Book
             </button>
-        </div>
-    )
+        </div >
+    }
 }
 
 export default App

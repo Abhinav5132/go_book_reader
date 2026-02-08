@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"os"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -21,7 +22,23 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+func (a *App) GetBookPath() (string, error) { // txt only for now
+	dialogueOptions := runtime.OpenDialogOptions{
+		Title: "Open Book",
+		Filters: []runtime.FileFilter{
+			{
+				DisplayName: "Books",
+				Pattern: "*.txt",
+			},
+		},
+		CanCreateDirectories: true,
+	};
+	file, err := runtime.OpenFileDialog(a.ctx, dialogueOptions)
+
+	data, err := os.ReadFile(file)
+	if err != nil {
+		return "", err
+	} 
+
+	return string(data), nil
 }
