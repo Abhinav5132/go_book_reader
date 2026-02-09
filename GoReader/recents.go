@@ -1,21 +1,17 @@
 package main
 
 import (
-	"context"
 	"log"
 	"os"
 	"time"
 
 	"GoReader/models"
 	"path/filepath"
-
-	"github.com/wailsapp/wails/v2/pkg/runtime"
-	"gorm.io/gorm"
 )
 
 func (a *App) AddRecentBookOnFileOpen(path string){
 	
-	fileType := fileTypeFromPath(path)
+	fileType := FileTypeFromPath(path)
 
 	file, err := os.Open(path)
 
