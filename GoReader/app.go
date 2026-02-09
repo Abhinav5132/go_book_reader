@@ -3,17 +3,20 @@ package main
 import (
 	"context"
 	"os"
+
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"gorm.io/gorm"
 )
 
 // App struct
 type App struct {
+	DB *gorm.DB
 	ctx context.Context
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(conn *gorm.DB ) *App {
+	return &App{DB: conn}
 }
 
 // startup is called when the app starts. The context is saved
@@ -42,3 +45,4 @@ func (a *App) GetBookPath() (string, error) { // txt only for now
 
 	return string(data), nil
 }
+
