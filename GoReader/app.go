@@ -36,12 +36,23 @@ func (a *App) GetBookPath() (string, error) { // txt only for now
 		},
 		CanCreateDirectories: true,
 	};
+	
 	file, err := runtime.OpenFileDialog(a.ctx, dialogueOptions)
-
+	if file == "" {
+		return "", nil
+	}
+	
 	data, err := os.ReadFile(file)
 	if err != nil {
 		return "", err
 	} 
+	
+	book, err := AddRecentBookOnFileOpen(file)
+	if err != nil {
+		return "", err
+	}
+
+	a.DB.Save(&book)
 
 	return string(data), nil
 }

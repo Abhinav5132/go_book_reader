@@ -7,7 +7,7 @@ type Book struct {
 	Name string `gorm:"unique; not null"`
 	Path string `gorm:"unique; not null"`
 	FileType string `gorm:"not null"`
-	LastAccessed time.Time `gorm:"not null"`
+	LastAccessed time.Time
 	Franchises []Franchise `gorm:"many2many:franchise_books;"`
 }
 

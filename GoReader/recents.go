@@ -9,21 +9,21 @@ import (
 	"path/filepath"
 )
 
-func (a *App) AddRecentBookOnFileOpen(path string){
+func AddRecentBookOnFileOpen(path string) (models.Book, error){
 	
-	fileType := FileTypeFromPath(path)
+	fileType := FileTypeFromPath(path) // change to 
 
 	file, err := os.Open(path)
 
 	if err != nil {
-		return
+		return models.Book{}, err
 	}
 	defer file.Close()
 	fileInfo, err:= file.Stat()
 
 	if err != nil {
 		log.Println(err)
-		return // actuall error handel this later 
+		return models.Book{}, err // actuall error handel this later 
 	}
 
 	book := models.Book{
@@ -33,8 +33,15 @@ func (a *App) AddRecentBookOnFileOpen(path string){
 		LastAccessed: time.Now(), // TODO FIX this will break if user changes time zones 
 	}
 
-	a.DB.Save(book)
+	return book, nil
 }
+
+func (a *App) GetFirstTenRecentBooks() []models.Book{
+	var recents []models.Book
+	a.DB.Limit(10).Order("last_accessed DESC").Find(&recents)
+
+	return recents
+} 
 
 func FileTypeFromPath(path string) string {
 	ext := filepath.Ext(path)

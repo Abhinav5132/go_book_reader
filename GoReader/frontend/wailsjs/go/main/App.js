@@ -5,3 +5,7 @@
 export function GetBookPath() {
   return window['go']['main']['App']['GetBookPath']();
 }
+
+export function GetFirstTenRecentBooks() {
+  return window['go']['main']['App']['GetFirstTenRecentBooks']();
+}
