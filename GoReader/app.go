@@ -1,8 +1,10 @@
 package main
 
 import (
+	"GoReader/models"
 	"context"
 	"os"
+	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"gorm.io/gorm"
@@ -10,12 +12,12 @@ import (
 
 // App struct
 type App struct {
-	DB *gorm.DB
+	DB  *gorm.DB
 	ctx context.Context
 }
 
 // NewApp creates a new App application struct
-func NewApp(conn *gorm.DB ) *App {
+func NewApp(conn *gorm.DB) *App {
 	return &App{DB: conn}
 }
 
@@ -31,22 +33,22 @@ func (a *App) GetBookPath() (string, error) { // txt only for now
 		Filters: []runtime.FileFilter{
 			{
 				DisplayName: "Books",
-				Pattern: "*.txt",
+				Pattern:     "*.txt",
 			},
 		},
 		CanCreateDirectories: true,
-	};
-	
+	}
+
 	file, err := runtime.OpenFileDialog(a.ctx, dialogueOptions)
 	if file == "" {
 		return "", nil
 	}
-	
+
 	data, err := os.ReadFile(file)
 	if err != nil {
 		return "", err
-	} 
-	
+	}
+
 	book, err := AddRecentBookOnFileOpen(file)
 	if err != nil {
 		return "", err
@@ -57,3 +59,18 @@ func (a *App) GetBookPath() (string, error) { // txt only for now
 	return string(data), nil
 }
 
+func (a *App) GetBookFromPath(path string) (string, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+
+	book, err := AddRecentBookOnFileOpen(path)
+	if err != nil {
+		return "", err
+	}
+
+	a.DB.Model(&models.Book{}).Where("id = ?", book.Id).Update("last_accessed", time.Now())
+
+	return string(data), nil
+}

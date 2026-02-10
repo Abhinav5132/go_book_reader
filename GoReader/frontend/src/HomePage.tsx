@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
-import { GetBookPath } from "../wailsjs/go/main/App"
+import { GetBookPath, GetBookFromPath } from "../wailsjs/go/main/App"
 import { GetFirstTenRecentBooks } from "../wailsjs/go/main/App"
 import { useNavigate } from "react-router-dom"
 import { BookDataContext } from "./BookDataContext";
@@ -37,7 +37,15 @@ export default function HomePage() {
         navigator("/open-txt")
     }
 
-    
+    const setNewTxtPath = async (path: string) => {
+        const data = await GetBookFromPath(path)
+
+        if (!data || data == "") return
+        ctx?.setBookData(data)
+        navigator("/open-txt")
+
+    }
+
     return (
         <div>
             <button onClick={txtPath}>
@@ -50,7 +58,7 @@ export default function HomePage() {
                     {
                         recentBooks?.map((book) => (
                             <li key={book.Id}>
-                                <div>
+                                <div onClick={() => setNewTxtPath(book.Path)}>
                                     <div>{book.Name}</div>
                                     <div>{book.Path}</div>
                                     <div>{book.LastAccessed}</div>    
