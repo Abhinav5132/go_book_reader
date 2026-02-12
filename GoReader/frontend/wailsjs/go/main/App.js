@@ -13,3 +13,11 @@ export function GetBookPath() {
 export function GetFirstTenRecentBooks() {
   return window['go']['main']['App']['GetFirstTenRecentBooks']();
 }
+
+export function OpenFolderAndCreateALibrary() {
+  return window['go']['main']['App']['OpenFolderAndCreateALibrary']();
+}
+
+export function TraverseThroughDirectoryAndAddToDb(arg1, arg2) {
+  return window['go']['main']['App']['TraverseThroughDirectoryAndAddToDb'](arg1, arg2);
+}

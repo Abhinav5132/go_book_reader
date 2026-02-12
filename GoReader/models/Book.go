@@ -4,11 +4,14 @@ import "time"
 
 type Book struct {
 	Id uint `gorm:"primaryKey"`
-	Name string `gorm:"unique; not null"`
-	Path string `gorm:"unique; not null"`
+	Name string `gorm:"uniqueIndex:idx_name_path; not null"`
+	Path string `gorm:"uniqueIndex:idx_name_path; not null"`
 	FileType string `gorm:"not null"`
 	LastAccessed time.Time
 	Franchises []Franchise `gorm:"many2many:franchise_books;"`
+
+	LibraryID uint
+	Library Library
 }
 
 

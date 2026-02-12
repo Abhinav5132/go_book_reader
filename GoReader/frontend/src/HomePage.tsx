@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
-import { GetBookPath, GetBookFromPath } from "../wailsjs/go/main/App"
+import { GetBookPath, GetBookFromPath, OpenFolderAndCreateALibrary } from "../wailsjs/go/main/App"
 import { GetFirstTenRecentBooks } from "../wailsjs/go/main/App"
 import { useNavigate } from "react-router-dom"
 import { BookDataContext } from "./BookDataContext";
@@ -46,12 +46,22 @@ export default function HomePage() {
 
     }
 
+    const addNewLibraryFromFolder = async() => {
+        const response = await OpenFolderAndCreateALibrary()
+
+        alert(response)
+
+        if (response == "Sucessfully created new library") {
+            // this should then redirect to the library page 
+        }
+    }
+
     return (
         <div>
             <button onClick={txtPath}>
                 Open Book
             </button>
-
+            <button onClick={addNewLibraryFromFolder}>Add Library from Folder</button>
             <div>
                 <h3>Recents</h3>
                 <ul>

@@ -15,7 +15,7 @@ func setUpDb() (*gorm.DB, error) {
 		log.Fatal(err)
 	} 
 	
-	database.AutoMigrate(&models.Book{}, &models.Franchise{}) // add the models here
+	database.AutoMigrate(&models.Book{}, &models.Franchise{}, &models.Library{}) // add the models here
 
 	return database, nil
 }

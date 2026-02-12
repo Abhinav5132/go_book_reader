@@ -11,7 +11,7 @@ import (
 
 func AddRecentBookOnFileOpen(path string) (models.Book, error){
 	
-	fileType := FileTypeFromPath(path) // change to 
+	fileType := FileTypeFromPath(path)
 
 	file, err := os.Open(path)
 

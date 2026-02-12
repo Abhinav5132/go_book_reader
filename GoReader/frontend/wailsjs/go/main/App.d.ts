@@ -7,3 +7,7 @@ export function GetBookFromPath(arg1:string):Promise<string>;
 export function GetBookPath():Promise<string>;
 
 export function GetFirstTenRecentBooks():Promise<Array<models.Book>>;
+
+export function OpenFolderAndCreateALibrary():Promise<string>;
+
+export function TraverseThroughDirectoryAndAddToDb(arg1:string,arg2:number):Promise<void>;
