@@ -3,9 +3,12 @@ package main
 import (
 	"GoReader/models"
 	"io/fs"
+	"log"
 	"path/filepath"
+	"slices"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"gorm.io/gorm/clause"
 )
 
 func(a *App) OpenFolderAndCreateALibrary() string {
@@ -28,8 +31,18 @@ func(a *App) OpenFolderAndCreateALibrary() string {
 		Picture: "",
 		Path: root,
 	}
+	err = a.DB.Clauses(clause.OnConflict{
+		Columns: []clause.Column{
+			{Name :"name"},
+			{Name: "path"},
+		},
+		DoNothing: true,
+	}).Create(&library).Error
 
-	a.DB.Save(&library)
+	if err != nil {
+		return "Failed to generate Library"
+	}
+	
 	err = a.TraverseThroughDirectoryAndAddToDb(root, library.ID)
 	return "Sucessfully created new library"
 } 
@@ -43,14 +56,33 @@ func(a* App) TraverseThroughDirectoryAndAddToDb(path string, libraryID uint) err
 			return nil
 		}
 
+		fileType := FileTypeFromPath(path)
+		if !slices.Contains(a.AllowedFileTypes, fileType){
+			return nil
+		}
+
 		book := models.Book{
 			Name:     d.Name(),
 			Path:     path,
 			FileType: FileTypeFromPath(path),
 			LibraryID: libraryID,
 		}
+		err = a.DB.Clauses(clause.OnConflict{
+			Columns:[]clause.Column{
+				{Name: "name"},
+				{Name: "path"},
+			},
+			DoUpdates: clause.AssignmentColumns([]string{
+				"library_id",
+				"file_type",
+			}),
+		}).Create(&book).Error
+		
+		if err != nil {
+			log.Println("DB error:", err)
+		}
 
-		return a.DB.Save(&book).Error
+		return nil
 	})
 	return err
 }

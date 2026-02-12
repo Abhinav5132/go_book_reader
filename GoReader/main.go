@@ -15,12 +15,12 @@ var assets embed.FS
 func main() {
 
 	conn, err := setUpDb()
-
+	AllowedFiletype := [...]string{"txt", "TXT", "pdf", "PDF", "EPUB", "epub"}
 	if err != nil{
 		log.Fatal(err)
 	}
 	// Create an instance of the app structure
-	app := NewApp(conn)
+	app := NewApp(conn, AllowedFiletype[:])
 
 	// Create application with options
 	err = wails.Run(&options.App{

@@ -14,11 +14,12 @@ import (
 type App struct {
 	DB  *gorm.DB
 	ctx context.Context
+	AllowedFileTypes []string
 }
 
 // NewApp creates a new App application struct
-func NewApp(conn *gorm.DB) *App {
-	return &App{DB: conn}
+func NewApp(conn *gorm.DB, AllowedFileTypes []string) *App {
+	return &App{DB: conn, AllowedFileTypes: AllowedFileTypes}
 }
 
 // startup is called when the app starts. The context is saved
