@@ -49,10 +49,10 @@ export default function HomePage() {
     const addNewLibraryFromFolder = async() => {
         const response = await OpenFolderAndCreateALibrary()
 
-        alert(response)
-
-        if (response == "Sucessfully created new library") {
+        if (!response) return
+        if (response.Response == "Sucessfully created new library") {
             // this should then redirect to the library page 
+            navigator(`/libraryPage/${response.LibraryId}`)
         }
     }
 

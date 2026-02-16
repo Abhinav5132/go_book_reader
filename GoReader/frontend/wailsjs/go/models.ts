@@ -1,3 +1,22 @@
+export namespace main {
+	
+	export class CreatelibraryResponse {
+	    LibraryId: number;
+	    Response: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new CreatelibraryResponse(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.LibraryId = source["LibraryId"];
+	        this.Response = source["Response"];
+	    }
+	}
+
+}
+
 export namespace models {
 	
 	export class Library {

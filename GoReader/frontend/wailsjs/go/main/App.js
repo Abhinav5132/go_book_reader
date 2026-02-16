@@ -14,6 +14,10 @@ export function GetFirstTenRecentBooks() {
   return window['go']['main']['App']['GetFirstTenRecentBooks']();
 }
 
+export function GetLibrary(arg1) {
+  return window['go']['main']['App']['GetLibrary'](arg1);
+}
+
 export function OpenFolderAndCreateALibrary() {
   return window['go']['main']['App']['OpenFolderAndCreateALibrary']();
 }

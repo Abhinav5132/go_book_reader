@@ -2,6 +2,7 @@ package main
 
 import (
 	"GoReader/models"
+	"errors"
 	"io/fs"
 	"log"
 	"path/filepath"
@@ -11,7 +12,12 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func(a *App) OpenFolderAndCreateALibrary() string {
+type CreatelibraryResponse struct{
+	LibraryId uint
+	Response string
+}
+
+func(a *App) OpenFolderAndCreateALibrary() CreatelibraryResponse {
 	dialogueOptions := runtime.OpenDialogOptions{
 		Title: "Select folder",
 	}
@@ -19,10 +25,16 @@ func(a *App) OpenFolderAndCreateALibrary() string {
 	root, err := runtime.OpenDirectoryDialog(a.ctx, dialogueOptions)
 
 	if root == "" {
-		return "No Directory Selected"
+		return CreatelibraryResponse{
+			LibraryId: 0,
+			Response: "No Directory Selected",
+		}
 	}
 	if err != nil{
-		return err.Error()
+		return CreatelibraryResponse{
+			LibraryId: 0,
+			Response: err.Error(),
+		}
 	}
 	folderName := filepath.Base(root)
 
@@ -40,14 +52,31 @@ func(a *App) OpenFolderAndCreateALibrary() string {
 	}).Create(&library).Error
 
 	if err != nil {
-		return "Failed to generate Library"
+		return CreatelibraryResponse{
+			LibraryId: 0,
+			Response: "Failed to generate Library",
+		}
 	}
-	
+
+	if library.ID != 0{
+		err = a.DB.Where("name = ? AND path = ?", folderName, root).First(&library).Error
+	}
+
+	if err != nil {
+		return CreatelibraryResponse{
+			LibraryId: 0,
+			Response: "Failed to fetch Library",
+		}
+	}
+
 	err = a.TraverseThroughDirectoryAndAddToDb(root, library.ID)
-	return "Sucessfully created new library"
+	return CreatelibraryResponse{
+		LibraryId: library.ID,
+		Response: "Sucessfully created new library",
+	}
 } 
 
-func(a* App) TraverseThroughDirectoryAndAddToDb(path string, libraryID uint) error{
+func(a* App) TraverseThroughDirectoryAndAddToDb(path string, LibraryId uint) error{
 	err:= filepath.WalkDir(path, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -65,7 +94,7 @@ func(a* App) TraverseThroughDirectoryAndAddToDb(path string, libraryID uint) err
 			Name:     d.Name(),
 			Path:     path,
 			FileType: FileTypeFromPath(path),
-			LibraryID: libraryID,
+			LibraryID: LibraryId,
 		}
 		err = a.DB.Clauses(clause.OnConflict{
 			Columns:[]clause.Column{
@@ -85,4 +114,21 @@ func(a* App) TraverseThroughDirectoryAndAddToDb(path string, libraryID uint) err
 		return nil
 	})
 	return err
+}
+
+
+func(a* App) GetLibrary(id uint) (models.Library, error) {
+	if id < 1 {
+		return models.Library{}, errors.New("Id cannot be less that 1")
+	}
+	var library = models.Library{
+		ID: id,
+	}
+	err := a.DB.Preload("books").First(&library).Error
+
+	if err != nil {
+		return models.Library{}, err
+	}
+	
+	return library, nil 
 }

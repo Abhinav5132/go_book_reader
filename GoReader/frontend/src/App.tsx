@@ -4,6 +4,7 @@ import './App.css';
 import TitleBar from './TitleBar';
 import HomePage from './HomePage';
 import { BookDataContext } from './BookDataContext';
+import LibraryPage from './LibraryPage';
 function App() {
     const [bookData, setBookData] = useState<string | null>(null)
     return (
@@ -12,6 +13,7 @@ function App() {
             <Route element={<TitleBar />}>
                     <Route path = "/" element={<HomePage />}/>
                     <Route path = "/open-txt" element={<OpenTxt />} />
+                    <Route path='/libraryPage/:id' element={<LibraryPage />} />
             </Route>
         </Routes>
     </BookDataContext.Provider>
