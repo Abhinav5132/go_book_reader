@@ -94,7 +94,7 @@ export namespace models {
 		}
 	}
 	export class Book {
-	    Id: number;
+	    ID: number;
 	    Name: string;
 	    Path: string;
 	    FileType: string;
@@ -110,7 +110,7 @@ export namespace models {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.Id = source["Id"];
+	        this.ID = source["ID"];
 	        this.Name = source["Name"];
 	        this.Path = source["Path"];
 	        this.FileType = source["FileType"];

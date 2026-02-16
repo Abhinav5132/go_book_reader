@@ -67,7 +67,7 @@ export default function HomePage() {
                 <ul>
                     {
                         recentBooks?.map((book) => (
-                            <li key={book.Id}>
+                            <li key={book.ID}>
                                 <div onClick={() => setNewTxtPath(book.Path)}>
                                     <div>{book.Name}</div>
                                     <div>{book.Path}</div>

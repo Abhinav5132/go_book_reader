@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Book struct {
-	Id uint `gorm:"primaryKey"`
+	ID uint `gorm:"primaryKey"`
 	Name string `gorm:"uniqueIndex:idx_name_path; not null"`
 	Path string `gorm:"uniqueIndex:idx_name_path; not null"`
 	FileType string `gorm:"not null"`

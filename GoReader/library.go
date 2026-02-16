@@ -124,7 +124,7 @@ func(a* App) GetLibrary(id uint) (models.Library, error) {
 	var library = models.Library{
 		ID: id,
 	}
-	err := a.DB.Preload("books").First(&library).Error
+	err := a.DB.Model(&models.Library{}).Preload("Books").First(&library).Error
 
 	if err != nil {
 		return models.Library{}, err

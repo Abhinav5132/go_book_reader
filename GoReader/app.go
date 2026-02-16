@@ -71,7 +71,7 @@ func (a *App) GetBookFromPath(path string) (string, error) {
 		return "", err
 	}
 
-	a.DB.Model(&models.Book{}).Where("id = ?", book.Id).Update("last_accessed", time.Now())
+	a.DB.Model(&models.Book{}).Where("id = ?", book.ID).Update("last_accessed", time.Now())
 
 	return string(data), nil
 }

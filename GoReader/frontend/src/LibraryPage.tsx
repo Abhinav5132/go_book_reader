@@ -45,11 +45,13 @@ export default function LibraryPage( ) {
             <div>
                 {
                     library.Books?.map((book) =>(
-                    <div onClick={() => setNewTxtPath(book.Path)}>
-                            <div>{book.Name}</div>
-                            <div>{book.Path}</div>
-                            <div>{book.LastAccessed}</div>    
-                        </div>
+                        <li key={book.ID}>
+                            <div onClick={() => setNewTxtPath(book.Path)}>
+                                <div>{book.Name}</div>
+                                <div>{book.Path}</div>
+                                <div>{book.LastAccessed}</div>    
+                            </div>
+                        </li>
                     ))
                 }
             </div>        
