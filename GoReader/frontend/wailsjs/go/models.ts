@@ -23,7 +23,11 @@ export namespace models {
 	    ID: number;
 	    Name: string;
 	    Path: string;
-	    Picture: string;
+	    Picture: number[];
+	    PinStatus: boolean;
+	    PinRank: number;
+	    // Go type: time
+	    LastAccessed: any;
 	    Books: Book[];
 	
 	    static createFrom(source: any = {}) {
@@ -36,6 +40,9 @@ export namespace models {
 	        this.Name = source["Name"];
 	        this.Path = source["Path"];
 	        this.Picture = source["Picture"];
+	        this.PinStatus = source["PinStatus"];
+	        this.PinRank = source["PinRank"];
+	        this.LastAccessed = this.convertValues(source["LastAccessed"], null);
 	        this.Books = this.convertValues(source["Books"], Book);
 	    }
 	

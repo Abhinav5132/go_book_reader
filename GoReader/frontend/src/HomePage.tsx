@@ -53,6 +53,8 @@ export default function HomePage() {
         if (response.Response == "Sucessfully created new library") {
             // this should then redirect to the library page 
             navigator(`/libraryPage/${response.LibraryId}`)
+        } else {
+            alert(response.Response)
         }
     }
 

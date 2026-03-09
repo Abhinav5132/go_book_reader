@@ -38,9 +38,18 @@ func(a *App) OpenFolderAndCreateALibrary() CreatelibraryResponse {
 	}
 	folderName := filepath.Base(root)
 
+	picture, err := BlobFromPath("assets/images.png") //should later generate images as a combo from the library.
+	
+	if err != nil {
+		return CreatelibraryResponse{
+			LibraryId: 0,
+			Response: "Failed to generate Library Image",
+		}
+	}
+
 	library := models.Library{
 		Name: folderName,
-		Picture: "",
+		Picture: picture,
 		Path: root,
 	}
 	err = a.DB.Clauses(clause.OnConflict{
@@ -132,3 +141,4 @@ func(a* App) GetLibrary(id uint) (models.Library, error) {
 	
 	return library, nil 
 }
+
